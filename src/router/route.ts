@@ -107,6 +107,8 @@ export class Route<Controller extends Constructor<any> = any> extends Macroable 
    */
   #middleware: StoreRouteMiddleware[][] = []
 
+  #meta: Record<string, unknown> = {}
+
   constructor(
     app: Application<any>,
     routerMiddleware: ParsedGlobalMiddleware[],
@@ -231,6 +233,11 @@ export class Route<Controller extends Constructor<any> = any> extends Macroable 
       this.#matchers[param] = matcher
     }
 
+    return this
+  }
+
+  meta(meta: Record<string, unknown>): this {
+    Object.assign(this.#meta, meta)
     return this
   }
 
@@ -367,7 +374,7 @@ export class Route<Controller extends Constructor<any> = any> extends Macroable 
       domain: this.#routeDomain,
       pattern: this.#computePattern(),
       matchers: this.#getMatchers(),
-      meta: {},
+      meta: this.#meta,
       name: this.#name,
       handler: this.#handler,
       methods: this.#methods,
